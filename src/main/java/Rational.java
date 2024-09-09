@@ -10,10 +10,23 @@ class Rational {
 
     Rational() {
         // to be completed
+            this.numerator = 0;
+            this.denominator = 1;
     }
 
     Rational(long numerator, long denominator) throws Illegal { 
         // to be completed
+            if (denominator == 0) {
+                throw new Illegal("Denominator cannot be zero.");
+            }
+            if (denominator < 0) {
+                // Ensure that the denominator is always positive
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+            this.numerator = numerator;
+            this.denominator = denominator;
+            simplestForm(); // Reduce the rational number to its simplest form
     } 
 
     // find the reduce form 
@@ -46,6 +59,9 @@ class Rational {
      */
     public void subtract(Rational x) {
         // to be completed
+        numerator = (numerator * x.denominator) - (x.numerator * denominator);
+        denominator = denominator * x.denominator;
+        simplestForm();
     }
 
     /***
@@ -54,14 +70,23 @@ class Rational {
      */
     public void multiply(Rational x) { 
         // to be completed
+        numerator = numerator * x.numerator;
+        denominator = denominator * x.denominator;
+        simplestForm();
     }
 
     /***
      * Compute a division of the current rational number to another given rational number
      * @param x the rational number to be divided by the current rational number
      */
-    public void divide(Rational x) {
+    public void divide(Rational x) throws Illegal {
         // to be completed
+        if (x.numerator == 0) {
+            throw new Illegal("Cannot divide by zero.");
+        }
+        numerator = numerator * x.denominator;
+        denominator = denominator * x.numerator;
+        simplestForm();
     }
 
     /***
@@ -71,7 +96,10 @@ class Rational {
      */
     public boolean equals(Object x) {
         // to be completed
-        return true; // TODO: This needs to be modified.
+        if (this == x) return true; // Same reference
+        if (!(x instanceof Rational)) return false; // Not a Rational object
+        Rational other = (Rational) x;
+        return this.numerator == other.numerator && this.denominator == other.denominator;
     }
 
     /***
@@ -82,7 +110,13 @@ class Rational {
      */
     public long compareTo(Object x) {
         // to be completed
-        return -1; // TODO: this needs to be modified.
+        if (!(x instanceof Rational)) {
+            throw new ClassCastException("Cannot compare Rational with non-Rational object.");
+        }
+        Rational other = (Rational) x;
+        long lhs = this.numerator * other.denominator;
+        long rhs = other.numerator * this.denominator;
+        return Long.compare(lhs, rhs);
     }
 
     /***
@@ -91,7 +125,7 @@ class Rational {
      */
     public String toString() { 
         // to be completed
-        return ""; // TODO: This needs to be modified.
+        return numerator + "/" + denominator;
     }
 
     public static void main(String[] args) {
